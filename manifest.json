@@ -1,0 +1,22 @@
+{
+    "manifest_version": 3,
+    "name": "请求拦截与Session工具",
+    "version": "1.0",
+    "description": "拦截请求参数并替换字段的值，支持域名过滤；复制和写入sessionStorage",
+    "permissions": [
+      "webRequest",
+      "storage",
+      "activeTab",
+      "scripting"
+    ],
+    "host_permissions": [
+      "<all_urls>"
+    ],
+    "background": {
+      "service_worker": "background.js"
+    },
+    "action": {
+      "default_popup": "popup.html",
+      "default_title": "请求与Session工具"
+    }
+  }
