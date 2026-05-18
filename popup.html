@@ -1,235 +1,32 @@
-<!-- popup.html -->
 <!DOCTYPE html>
 <html>
 <head>
   <meta charset="UTF-8">
-  <style>
-    * { box-sizing: border-box; }
-    body {
-      width: 550px;
-      min-height: 450px;
-      margin: 0;
-      padding: 0;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      background: #f5f5f5;
-    }
-    .tabs {
-      display: flex;
-      border-bottom: 1px solid #ddd;
-      background: white;
-    }
-    .tab-btn {
-      flex: 1;
-      padding: 12px;
-      background: none;
-      border: none;
-      cursor: pointer;
-      font-size: 14px;
-      font-weight: 500;
-      transition: all 0.2s;
-      color: #6c9eef;
-    }
-    .tab-btn.active {
-      color: #4285f4;
-      border-bottom: 2px solid #4285f4;
-    }
-    .tab-content {
-      display: none;
-      padding: 16px;
-    }
-    .tab-content.active {
-      display: block;
-    }
-    .form-group {
-      margin-bottom: 16px;
-    }
-    label {
-      display: block;
-      margin-bottom: 6px;
-      font-weight: 500;
-      font-size: 13px;
-      color: #333;
-    }
-    input, textarea {
-      width: 100%;
-      padding: 8px 10px;
-      border: 1px solid #ddd;
-      border-radius: 6px;
-      font-size: 13px;
-      font-family: monospace;
-    }
-    textarea {
-      resize: vertical;
-      min-height: 80px;
-    }
-    button {
-      background: #4285f4;
-      color: white;
-      border: none;
-      padding: 8px 16px;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 13px;
-      font-weight: 500;
-      margin-right: 8px;
-    }
-    button:hover {
-      /* background: #3367d6; */
-    }
-    button.secondary {
-      background: #e0e0e0;
-      color: #333;
-    }
-    button.secondary:hover {
-      background: #ccc;
-    }
-    button.danger {
-      background: #ea4335;
-    }
-    button.danger:hover {
-      background: #c5221f;
-    }
-    .rule-item {
-      background: white;
-      border: 1px solid #e0e0e0;
-      border-radius: 6px;
-      padding: 10px;
-      margin-bottom: 8px;
-      font-size: 12px;
-    }
-    .domain-list {
-      background: white;
-      border: 1px solid #e0e0e0;
-      border-radius: 6px;
-      padding: 8px;
-      min-height: 60px;
-      margin-bottom: 8px;
-    }
-    .domain-tag {
-      display: inline-block;
-      background: #e8f0fe;
-      color: #1967d2;
-      padding: 4px 8px;
-      border-radius: 16px;
-      font-size: 12px;
-      margin: 4px 4px 0 0;
-    }
-    .status {
-      font-size: 12px;
-      padding: 8px;
-      border-radius: 4px;
-      margin-top: 12px;
-    }
-    .status.success {
-      background: #e6f4ea;
-      color: #137333;
-    }
-    .status.error {
-      background: #fce8e6;
-      color: #c5221f;
-    }
-    hr {
-      margin: 16px 0;
-      border: none;
-      border-top: 1px solid #e0e0e0;
-    }
-    h4 {
-      margin: 0 0 8px 0;
-      font-size: 13px;
-    }
-    .flex-row {
-      display: flex;
-      gap: 8px;
-      align-items: center;
-      flex-wrap: wrap;
-    }
-    .replace-row {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 12px;
-      align-items: center;
-      flex-wrap: wrap;
-    }
-    .replace-row input {
-      flex: 1;
-      min-width: 100px;
-    }
-    .replace-row input.field-input {
-      flex: 1.5;
-    }
-    .replace-row input.value-input {
-      flex: 1.5;
-    }
-    .replace-row button {
-      width: auto;
-      padding: 8px 12px;
-    }
-    .hint {
-      font-size: 11px;
-      color: #888;
-      margin-top: 4px;
-    }
-    .rule-badge {
-      display: inline-block;
-      background: #e8f0fe;
-      color: #1967d2;
-      padding: 2px 6px;
-      border-radius: 4px;
-      font-family: monospace;
-      font-size: 11px;
-    }
-  </style>
+  <link rel="stylesheet" href="popup.css">
 </head>
 <body>
   <div class="tabs">
-    <button class="tab-btn active" data-tab="tab1">请求拦截</button>
-    <button class="tab-btn" data-tab="tab2">Session存储</button>
+    <button class="tab-btn active" data-target="tab1">请求拦截 (Tab1)</button>
+    <button class="tab-btn" data-target="tab2">Session同步 (Tab2)</button>
   </div>
 
-  <!-- Tab 1: 请求拦截配置 -->
+  <!-- Tab 1: 请求拦截 -->
   <div id="tab1" class="tab-content active">
-    <h4>📡 拦截规则配置</h4>
-    <div class="form-group">
-      <label>🎯 目标域名 (支持部分匹配，每行一个)</label>
-      <textarea id="domains" rows="3" placeholder="例如:&#10;api.example.com&#10;localhost:3000&#10;test.com"></textarea>
-      <button id="saveDomainsBtn" class="secondary" style="margin-top: 8px;">保存域名</button>
-    </div>
-
-    <div class="form-group">
-      <label>🔄 字段值替换规则</label>
-      <div id="replacementsList"></div>
-      <div class="replace-row">
-        <input type="text" id="fieldName" placeholder="字段名" class="field-input">
-        <input type="text" id="oldValue" placeholder="原值 (可选，留空则替换所有值)">
-        <input type="text" id="newValue" placeholder="新值">
-        <button id="addReplacementBtn">+ 添加</button>
-      </div>
-      <div class="hint">💡 提示：如果填写原值，则只在该字段的值匹配原值时替换；留空则直接替换该字段的所有值</div>
-    </div>
-
-    <hr>
-    <div class="flex-row">
-      <button id="enableRulesBtn" style="background:#34a853;">✅ 启用拦截</button>
-      <button id="disableRulesBtn" class="secondary">❌ 禁用拦截</button>
-    </div>
-    <div id="tab1Status" class="status" style="display:none;"></div>
+    <label>目标域名 (逗号分隔):</label>
+    <input type="text" id="domains" placeholder="例如: api.example.com, test.com">
+    
+    <label>替换的字段 (JSON格式):</label>
+    <textarea id="replaceFields" placeholder='{"userId": 999, "role": "admin"}'></textarea>
+    
+    <button id="saveConfig">保存拦截配置</button>
+    <div id="status1" class="status"></div>
   </div>
 
-  <!-- Tab 2: SessionStorage 工具 -->
+  <!-- Tab 2: Session 复制 -->
   <div id="tab2" class="tab-content">
-    <h4>💾 SessionStorage 操作</h4>
-    <div class="form-group">
-      <label>📋 当前页面 SessionStorage 数据</label>
-      <textarea id="sessionData" rows="8" readonly placeholder="点击「读取并复制」后显示数据..."></textarea>
-    </div>
-    <div class="flex-row">
-      <button id="copySessionBtn">📖 读取并复制</button>
-      <button id="pasteSessionBtn">✍️ 写入到当前页面</button>
-    </div>
-    <div id="tab2Status" class="status" style="display:none;"></div>
-    <div style="margin-top: 16px; font-size: 12px; color: #666; background: #fff3e0; padding: 8px; border-radius: 6px;">
-      ⚠️ 注意：写入操作会<strong>完全替换</strong>当前页面的所有 sessionStorage 数据
-    </div>
+    <button id="copySession" class="btn-primary">复制当前页 SessionStorage</button>
+    <button id="pasteSession" class="btn-danger">粘贴至当前页并覆盖</button>
+    <div id="status2" class="status"></div>
   </div>
 
   <script src="popup.js"></script>
