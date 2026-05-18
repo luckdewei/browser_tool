@@ -7,12 +7,14 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
     });
 });
 
-// 初始化加载 Tab1 配置
+// 初始化加载 Tab1 配置（无保存记录时使用默认配置）
 chrome.storage.local.get(['interceptConfig'], (result) => {
-    if (result.interceptConfig) {
-        document.getElementById('domains').value = result.interceptConfig.domains.join(',');
-        document.getElementById('replaceFields').value = JSON.stringify(result.interceptConfig.fields);
+    const config = result.interceptConfig || DEFAULT_INTERCEPT_CONFIG;
+    if (!result.interceptConfig) {
+        chrome.storage.local.set({ interceptConfig: DEFAULT_INTERCEPT_CONFIG });
     }
+    document.getElementById('domains').value = config.domains.join(',');
+    document.getElementById('replaceFields').value = JSON.stringify(config.fields, null, 2);
 });
 
 // Tab1: 保存配置并通知页面

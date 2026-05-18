@@ -6,13 +6,15 @@ script.onload = function () {
 };
 (document.head || document.documentElement).appendChild(script);
 
-// 2. 页面加载时，获取初始拦截配置
+// 2. 页面加载时，获取初始拦截配置（无保存记录时使用默认配置）
 chrome.storage.local.get(['interceptConfig'], (result) => {
-    if (result.interceptConfig) {
-        setTimeout(() => {
-            window.postMessage({ type: 'SYNC_INTERCEPT_CONFIG', config: result.interceptConfig }, '*');
-        }, 500); // 留出一点时间等待 inject.js 加载完成
+    const config = result.interceptConfig || DEFAULT_INTERCEPT_CONFIG;
+    if (!result.interceptConfig) {
+        chrome.storage.local.set({ interceptConfig: DEFAULT_INTERCEPT_CONFIG });
     }
+    setTimeout(() => {
+        window.postMessage({ type: 'SYNC_INTERCEPT_CONFIG', config }, '*');
+    }, 500); // 留出一点时间等待 inject.js 加载完成
 });
 
 // 3. 监听 Storage 变化：当 Popup 保存配置时，所有 iframe 都会收到此事件，并同步给自己的 inject.js

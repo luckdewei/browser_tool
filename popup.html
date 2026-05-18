@@ -13,10 +13,10 @@
   <!-- Tab 1: 请求拦截 -->
   <div id="tab1" class="tab-content active">
     <label>目标域名 (逗号分隔):</label>
-    <input type="text" id="domains" placeholder="例如: api.example.com, test.com">
+    <input type="text" id="domains" placeholder="https://gw.test.bestpay.net">
     
     <label>替换的字段 (JSON格式):</label>
-    <textarea id="replaceFields" placeholder='{"userId": 999, "role": "admin"}'></textarea>
+    <textarea id="replaceFields" placeholder='{"env": "DEV_XQYFGL191447"}'></textarea>
     
     <button id="saveConfig">保存拦截配置</button>
     <div id="status1" class="status"></div>
@@ -29,6 +29,7 @@
     <div id="status2" class="status"></div>
   </div>
 
+  <script src="config.js"></script>
   <script src="popup.js"></script>
 </body>
 </html>

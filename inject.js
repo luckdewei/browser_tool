@@ -1,4 +1,7 @@
-let interceptConfig = { domains: [], fields: {} };
+let interceptConfig = {
+    domains: ['https://gw.test.bestpay.net'],
+    fields: { env: 'DEV_XQYFGL191447' }
+};
 
 // 监听来自 content.js 的配置更新
 window.addEventListener('message', (event) => {
